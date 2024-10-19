@@ -122,9 +122,9 @@ authRouter.delete(
   "/",
   authRouter.authenticateToken,
   asyncHandler(async (req, res) => {
-    clearAuth(req);
-    res.json({ message: "logout successful" });
-  }),
+    await clearAuth(req);
+    res.json({ message: 'logout successful' });
+  })
 );
 
 // updateUser
