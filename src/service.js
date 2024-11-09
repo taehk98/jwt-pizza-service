@@ -4,10 +4,13 @@ const orderRouter = require("./routes/orderRouter.js");
 const franchiseRouter = require("./routes/franchiseRouter.js");
 const version = require("./version.json");
 const config = require("./config.js");
+const Metrics = require("./metrics.js")
 
 const app = express();
+const metrics = new Metrics();
 app.use(express.json());
 app.use(setAuthUser);
+app.use(metrics.requestTracker);
 app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Origin", req.headers.origin || "*");
   res.setHeader("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE");
@@ -52,6 +55,12 @@ app.use((err, req, res, next) => {
   res
     .status(err.statusCode ?? 500)
     .json({ message: err.message, stack: err.stack });
+  
+  if (req.path === '/api/auth' && req.method === 'PUT') {
+    metrics.increaseFailedAuth();
+    metrics.decreaseSuccessfulAuth();
+  }
+
   next();
 });
 
