@@ -65,7 +65,7 @@ class Metrics {
   }
   
   sendMetricsPeriodically(period) {
-    const timer = setInterval(() => {
+    setInterval(() => {
       try {
         // this.buf = new MetricBuilder();
         this.httpMetrics();
@@ -102,7 +102,7 @@ class Metrics {
 
   requestTracker(req, res, next) {
     const start = Date.now();
-    if (this.requestCounts.hasOwnProperty(req.method)) {
+    if (Object.prototype.hasOwnProperty.call(this.requestCounts, req.method)) {
       this.requestCounts[req.method] += 1;
     }
     if (req.path === '/api/auth' && req.method === 'PUT') {
