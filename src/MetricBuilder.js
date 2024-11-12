@@ -15,15 +15,15 @@ class MetricBuilder {
   toString(separator = '\n') {
     return this.metrics
       .map(metric => {
-        const { prefix, name, value, optional } = metric;
-        let formattedMetric = `${prefix}.${name}=${value}`;
+        const { prefix, name, value } = metric;
+        let formattedMetric = `${prefix}`;
 
         formattedMetric += `,source=${config.metrics.source}`;
-        
-        if (optional) {
-          for (const [key, val] of Object.entries(optional)) {
-            formattedMetric += `,${key}=${val}`;
-          }
+
+        if (name === 'put' || name === 'post' || name === 'get' || name === 'delete' || name === 'all'){
+          formattedMetric += `,method=${name} total=${value}`;
+        }else {
+          formattedMetric += ` ${name}=${value}`;
         }
         
         return formattedMetric;

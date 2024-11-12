@@ -19,6 +19,8 @@ app.use((req, res, next) => {
   next();
 });
 
+metrics.sendMetricsPeriodically(60000);
+
 const apiRouter = express.Router();
 app.use("/api", apiRouter);
 apiRouter.use("/auth", authRouter);
@@ -59,6 +61,7 @@ app.use((err, req, res, next) => {
   if (req.path === '/api/auth' && req.method === 'PUT') {
     metrics.increaseFailedAuth();
     metrics.decreaseSuccessfulAuth();
+    console.error('here')
   }
 
   next();
