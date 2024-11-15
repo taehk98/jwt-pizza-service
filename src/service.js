@@ -5,6 +5,7 @@ const franchiseRouter = require("./routes/franchiseRouter.js");
 const version = require("./version.json");
 const config = require("./config.js");
 const Metrics = require("./metrics.js")
+const logger = require('./logger');
 
 const app = express();
 const metrics = new Metrics();
@@ -18,6 +19,7 @@ app.use((req, res, next) => {
   res.setHeader("Access-Control-Allow-Credentials", "true");
   next();
 });
+app.use(logger.httpLogger);
 
 metrics.sendMetricsPeriodically(60000);
 
@@ -54,6 +56,7 @@ app.use("*", (req, res) => {
 
 // Default error handler for all exceptions and errors.
 app.use((err, req, res, next) => {
+  logger.unhandledErrorLogger(err);
   res
     .status(err.statusCode ?? 500)
     .json({ message: err.message, stack: err.stack });
@@ -61,7 +64,6 @@ app.use((err, req, res, next) => {
   if (req.path === '/api/auth' && req.method === 'PUT') {
     metrics.increaseFailedAuth();
     metrics.decreaseSuccessfulAuth();
-    console.error('here')
   }
 
   next();
