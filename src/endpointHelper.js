@@ -9,20 +9,18 @@ class StatusCodeError extends Error {
 }
 
 const asyncHandler = (fn) => (req, res, next) => {
-  return fn(req, res, next)
-    .then(() => {
-      logger.factoryLogger({
-        method: req.method,
-        url: req.originalUrl,
-        body: req.body,
-        headers: req.headers,
-        path: req.path
-      });
-    })
-    .catch((err) => {
-      logger.unhandledErrorLogger(err);
-      next(err);
-    });
+  // return fn(req, res, next)
+  //   .then(() => {
+  //     logger.factoryLogger({
+  //       method: req.method,
+  //       url: req.originalUrl,
+  //       body: req.body,
+  //     });
+  //   })
+  //   .catch((err) => {
+  //     logger.unhandledErrorLogger(err);
+  //     next(err);
+  //   });
 };
 
 module.exports = {
